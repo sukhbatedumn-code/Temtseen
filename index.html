@@ -531,17 +531,29 @@ function h2hPts(tl,gms){
   return h;
 }
 function sortTeams(names,tm,gms){
-  return[...names].map(n=>tm[n]).filter(Boolean).sort((a,b)=>{
+  const arr=[...names].map(n=>tm[n]).filter(Boolean);
+  arr.sort((a,b)=>{
+    // 1. Нийт оноо
     if(b.pts!==a.pts)return b.pts-a.pts;
-    const h=h2hPts([a.name,b.name],gms);
-    if(h[a.name].pts!==h[b.name].pts)return h[b.name].pts-h[a.name].pts;
-    return(b.bw-b.bl)-(a.bw-a.bl);
+    // 2. Бөмбөгний зөрүү
+    const bdA=a.bw-a.bl, bdB=b.bw-b.bl;
+    if(bdB!==bdA)return bdB-bdA;
+    // 3. Харилцан тоглолт (h2h)
+    const tied=arr.filter(t=>t.pts===a.pts).map(t=>t.name);
+    const h=h2hPts(tied,gms);
+    const ha=h[a.name]?h[a.name].pts:0;
+    const hb=h[b.name]?h[b.name].pts:0;
+    return hb-ha;
   });
+  return arr;
 }
 function getReason(t,prev,tm,gms){
   if(!prev||tm[t].pts!==tm[prev].pts)return'';
+  // оноо тэнцвэл бөмбөгөөр, дараа h2h
+  const bdT=tm[t].bw-tm[t].bl, bdP=tm[prev].bw-tm[prev].bl;
+  if(bdT!==bdP)return'бөмбөг';
   const h=h2hPts([t,prev],gms);
-  return h[t].pts!==h[prev].pts?'h2h':'бөмбөг';
+  return h[t].pts!==h[prev].pts?'h2h':'';
 }
 
 function renderStandings(){
@@ -552,7 +564,8 @@ function renderStandings(){
   let html=genderFilterHTML('standings');
   genders.forEach(gen=>{
     const genderMs=ms.filter(m=>m.gender===gen);
-    const groups=[...new Set(genderMs.map(m=>m.group))];
+    const poGroups=['Хагас финал 1','Хагас финал 2','Финал','3-р байр'];
+    const groups=[...new Set(genderMs.filter(m=>!poGroups.includes(m.group)).map(m=>m.group))];
     groups.forEach(grp=>{
       const gms=genderMs.filter(m=>m.group===grp);
       const tm=buildStats(gms);const names=Object.keys(tm);if(!names.length)return;

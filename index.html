@@ -288,6 +288,12 @@ function parseCSV(text){
 
 async function fetchData(){
   if(!csvUrl){showDemo();return;}
+  // CSV текст мөн эсэхийг шалгах
+  function isCSV(text){
+    if(!text||text.length<10)return false;
+    const first=text.trim().split('\n')[0]||'';
+    return first.includes(',')&&!first.includes('<');
+  }
   const proxies=[
     'https://corsproxy.io/?'+encodeURIComponent(csvUrl),
     'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl),
@@ -298,7 +304,7 @@ async function fetchData(){
       const r=await fetch(url,{cache:'no-store'});
       if(!r.ok)continue;
       const text=await r.text();
-      if(!text||text.length<10)continue;
+      if(!isCSV(text))continue;
       allMatches=parseCSV(text);
       renderAll();
       document.getElementById('last-update').textContent='Шинэчлэгдсэн: '+new Date().toLocaleTimeString('mn-MN');
@@ -306,7 +312,6 @@ async function fetchData(){
       return;
     }catch(e){continue;}
   }
-  // All proxies failed
   ['standings','results','schedule','playoff'].forEach(s=>{
     const el=document.getElementById(s+'-content');
     if(el)el.innerHTML='<div class="state-msg"><div style="font-size:24px">⚠</div><div>CSV татахад алдаа гарлаа</div><div style="font-size:11px;margin-top:4px">Тохиргоо хэсгийн линкийг шалгана уу</div></div>';

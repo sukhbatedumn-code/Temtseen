@@ -288,16 +288,29 @@ function parseCSV(text){
 
 async function fetchData(){
   if(!csvUrl){showDemo();return;}
-  try{
-    const r=await fetch('https://corsproxy.io/?'+encodeURIComponent(csvUrl),{cache:'no-store'});
-    if(!r.ok)throw new Error();
-    allMatches=parseCSV(await r.text());
-    renderAll();
-    document.getElementById('last-update').textContent='Шинэчлэгдсэн: '+new Date().toLocaleTimeString('mn-MN');
-    document.getElementById('live-badge').style.display=allMatches.some(m=>m.status==='live')?'flex':'none';
-  }catch(e){
-    document.getElementById('results-content').innerHTML='<div class="state-msg"><div style="font-size:24px">⚠</div><div>CSV татахад алдаа гарлаа</div></div>';
+  const proxies=[
+    'https://corsproxy.io/?'+encodeURIComponent(csvUrl),
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl),
+    csvUrl
+  ];
+  for(const url of proxies){
+    try{
+      const r=await fetch(url,{cache:'no-store'});
+      if(!r.ok)continue;
+      const text=await r.text();
+      if(!text||text.length<10)continue;
+      allMatches=parseCSV(text);
+      renderAll();
+      document.getElementById('last-update').textContent='Шинэчлэгдсэн: '+new Date().toLocaleTimeString('mn-MN');
+      document.getElementById('live-badge').style.display=allMatches.some(m=>m.status==='live')?'flex':'none';
+      return;
+    }catch(e){continue;}
   }
+  // All proxies failed
+  ['standings','results','schedule','playoff'].forEach(s=>{
+    const el=document.getElementById(s+'-content');
+    if(el)el.innerHTML='<div class="state-msg"><div style="font-size:24px">⚠</div><div>CSV татахад алдаа гарлаа</div><div style="font-size:11px;margin-top:4px">Тохиргоо хэсгийн линкийг шалгана уу</div></div>';
+  });
 }
 
 function showDemo(){

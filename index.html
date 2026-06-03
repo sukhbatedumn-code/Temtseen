@@ -9,328 +9,185 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#0a0a0f;
-  --surface:#13131a;
-  --surface2:#1c1c26;
-  --border:#ffffff10;
-  --border2:#ffffff20;
-  --text:#f0f0f0;
-  --text2:#9090a8;
-  --text3:#55556a;
-  --accent:#e8ff47;
-  --accent2:#47ffe8;
-  --green:#2dff9a;
-  --red:#ff4d6d;
-  --gold:#ffd166;
+  --fn-bebas:"Bebas Neue",sans-serif;
+  --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c26;
+  --border:#ffffff10;--border2:#ffffff20;
+  --text:#f0f0f0;--text2:#9090a8;--text3:#55556a;
+  --accent:#e8ff47;--accent2:#47ffe8;
+  --green:#2dff9a;--red:#ff4d6d;--gold:#ffd166;
+  --purple:#c084fc;--pink:#f472b6;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'DM Sans',sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-/* grid noise texture */
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background-image:
-    linear-gradient(rgba(232,255,71,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(232,255,71,.03) 1px,transparent 1px);
-  background-size:48px 48px;
-  pointer-events:none;z-index:0;
-}
-
-header{
-  position:sticky;top:0;z-index:50;
-  background:rgba(10,10,15,.9);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border2);
-  padding:0 2rem;
-  height:64px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.logo{
-  display:flex;align-items:center;gap:12px;
-}
-.logo-icon{
-  width:36px;height:36px;
-  background:var(--accent);
-  border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;
-  flex-shrink:0;
-}
-.logo-text{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:22px;
-  letter-spacing:.08em;
-  color:var(--text);
-  line-height:1;
-}
-.logo-sub{
-  font-size:11px;
-  color:var(--text2);
-  letter-spacing:.06em;
-  text-transform:uppercase;
-}
-.live-badge{
-  display:flex;align-items:center;gap:6px;
-  font-size:11px;font-weight:600;
-  color:var(--green);
-  letter-spacing:.06em;
-  text-transform:uppercase;
-}
-.live-dot{
-  width:7px;height:7px;
-  border-radius:50%;
-  background:var(--green);
-  animation:pulse 1.4s ease-in-out infinite;
-}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(232,255,71,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(232,255,71,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border2);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.08em;color:var(--text);line-height:1}
+.logo-sub{font-size:11px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--green);letter-spacing:.06em;text-transform:uppercase}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 .last-update{font-size:11px;color:var(--text3)}
-
-.tabs{
-  display:flex;gap:4px;
-  padding:1.5rem 2rem 0;
-  position:relative;z-index:1;
-}
-.tab{
-  padding:8px 20px;font-size:13px;font-weight:500;
-  border:1px solid var(--border2);
-  border-radius:6px 6px 0 0;
-  cursor:pointer;
-  background:var(--surface);
-  color:var(--text2);
-  letter-spacing:.03em;
-  transition:all .2s;
-  border-bottom:none;
-}
+.tabs{display:flex;gap:4px;padding:1.5rem 2rem 0;position:relative;z-index:1;flex-wrap:wrap}
+.tab{padding:8px 18px;font-size:13px;font-weight:500;border:1px solid var(--border2);border-radius:6px 6px 0 0;cursor:pointer;background:var(--surface);color:var(--text2);letter-spacing:.03em;transition:all .2s;border-bottom:none;white-space:nowrap}
 .tab:hover{color:var(--text);background:var(--surface2)}
-.tab.active{
-  background:var(--surface2);
-  color:var(--accent);
-  border-color:var(--border2);
-  border-bottom:2px solid var(--accent);
-}
-
-.content{
-  position:relative;z-index:1;
-  padding:0 2rem 2rem;
-  background:var(--surface2);
-  border:1px solid var(--border2);
-  border-top:none;
-  margin:0 2rem;
-  min-height:400px;
-  border-radius:0 0 12px 12px;
-}
+.tab.active{background:var(--surface2);color:var(--accent);border-color:var(--border2);border-bottom:2px solid var(--accent)}
+.content{position:relative;z-index:1;padding:0 2rem 2rem;background:var(--surface2);border:1px solid var(--border2);border-top:none;margin:0 2rem;min-height:400px;border-radius:0 0 12px 12px}
 .section{display:none}.section.show{display:block}
 
-/* ===== MATCHES ===== */
-.group-block{padding:1.5rem 0 0}
-.group-name{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:13px;letter-spacing:.15em;
-  color:var(--text3);
-  text-transform:uppercase;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:12px;
-}
-.matches-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:10px;
-}
-.match-card{
-  background:var(--surface);
-  border:1px solid var(--border2);
-  border-radius:10px;
-  padding:1.25rem;
-  position:relative;
-  overflow:hidden;
-  transition:border-color .2s;
-}
-.match-card:hover{border-color:var(--border2)}
-.match-card.live-card{border-color:rgba(45,255,154,.25)}
-.match-card.live-card::before{
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--green),var(--accent2));
-}
-.match-card.done-card{opacity:.8}
+/* GENDER FILTER */
+.gender-filter{display:flex;gap:6px;padding:1.25rem 0 .5rem;flex-wrap:wrap}
+.gf-btn{padding:5px 16px;font-size:12px;font-weight:600;letter-spacing:.04em;border:1px solid var(--border2);border-radius:20px;cursor:pointer;background:transparent;color:var(--text2);transition:all .2s}
+.gf-btn:hover{color:var(--text)}
+.gf-btn.active-all{background:rgba(232,255,71,.1);border-color:var(--accent);color:var(--accent)}
+.gf-btn.active-m{background:rgba(71,255,232,.1);border-color:var(--accent2);color:var(--accent2)}
+.gf-btn.active-f{background:rgba(244,114,182,.1);border-color:var(--pink);color:var(--pink)}
 
-.card-top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:1rem;
-}
-.card-round{
-  font-size:10px;font-weight:600;letter-spacing:.08em;
-  color:var(--text3);text-transform:uppercase;
-}
-.status-pill{
-  font-size:10px;font-weight:600;letter-spacing:.06em;
-  text-transform:uppercase;
-  padding:2px 8px;border-radius:20px;
-}
+/* GENDER BADGE */
+.g-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.06em;padding:1px 7px;border-radius:20px;text-transform:uppercase}
+.g-m{background:rgba(71,255,232,.1);color:var(--accent2);border:1px solid rgba(71,255,232,.2)}
+.g-f{background:rgba(244,114,182,.1);color:var(--pink);border:1px solid rgba(244,114,182,.2)}
+
+/* SECTION LABELS */
+.sec-header{padding:1.5rem 0 0}
+.sec-label{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.status-section{margin-bottom:1.5rem}
+.status-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.4s ease-in-out infinite;flex-shrink:0}
+.dot-done{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.dot-wait{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.label-live{color:var(--green)}.label-done{color:var(--text3)}.label-wait{color:var(--gold)}
+.empty-status{color:var(--text3);font-size:12px;padding:12px 0;text-align:center;font-style:italic}
+
+/* MATCH CARD */
+.match-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;margin-bottom:8px;overflow:hidden;position:relative}
+.match-card.live-card{border-color:rgba(45,255,154,.3)}
+.match-card.live-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--accent2))}
+.match-card.done-card{opacity:.75}
+.match-card.wait-card{opacity:.6}
+.mc-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
+.mc-team{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.mc-team.right{align-items:flex-end;text-align:right}
+.mc-team-top{display:flex;align-items:center;gap:10px}
+.mc-team.right .mc-team-top{flex-direction:row-reverse}
+.mc-set-score{font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:1;color:var(--text2)}
+.mc-set-score.win{color:var(--accent)}
+.mc-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.2}
+.mc-sets{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+.mc-team.right .mc-sets{justify-content:flex-end}
+.set-box{display:flex;flex-direction:column;align-items:center;min-width:32px}
+.set-label{font-size:9px;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.set-num{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;color:var(--text2);background:rgba(255,255,255,.04);border-radius:5px;width:32px;text-align:center;padding:2px 0}
+.set-num.set-win{color:var(--accent);background:rgba(232,255,71,.08)}
+.set-num.empty{color:var(--text3);opacity:.35}
+.mc-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 12px;border-left:1px solid var(--border);border-right:1px solid var(--border);gap:5px;min-width:80px}
+.mc-status{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px}
 .s-live{background:rgba(45,255,154,.15);color:var(--green)}
 .s-done{background:rgba(255,255,255,.06);color:var(--text3)}
 .s-wait{background:rgba(255,209,102,.1);color:var(--gold)}
+.mc-pts-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.mc-pts{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--text2)}
+.mc-group{font-size:9px;color:var(--text3);letter-spacing:.04em;text-align:center;margin-top:2px}
+.mc-done-mark{font-size:10px;font-weight:600;color:var(--green);letter-spacing:.04em}
 
-.versus{
-  display:grid;
-  grid-template-columns:1fr 56px 1fr;
-  align-items:center;
-  gap:6px;
-  margin-bottom:1rem;
-}
-.t-side{text-align:center}
-.t-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;line-height:1.2}
-.t-meta{font-size:10px;color:var(--text3);line-height:1.7}
-.t-meta b{color:var(--accent);font-weight:600}
-.t-sets{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:48px;line-height:1;
-  color:var(--text2);
-  transition:color .3s;
-}
-.t-sets.win{color:var(--accent)}
-.mid-col{text-align:center}
-.mid-vs{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
-.mid-balls{font-size:11px;color:var(--text2)}
-
-.set-pills{
-  display:flex;justify-content:center;gap:4px;flex-wrap:wrap;
-  margin-bottom:.75rem;
-}
-.set-p{
-  display:flex;gap:3px;align-items:center;
-  font-size:10px;
-  padding:2px 8px;border-radius:20px;
-  border:1px solid var(--border2);
-  background:rgba(255,255,255,.03);
-  color:var(--text3);
-}
-.set-p b{color:var(--text);font-weight:600}
-.set-p.cur{border-color:rgba(45,255,154,.4);background:rgba(45,255,154,.07);color:var(--green)}
-.set-p.cur b{color:var(--green)}
-.set-p .sp{color:var(--accent);font-size:9px;font-weight:700}
-
-/* ===== STANDINGS ===== */
-.standings-block{padding:1.5rem 0 0}
-.standings-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:13px;letter-spacing:.15em;
-  color:var(--text3);text-transform:uppercase;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:12px;
-}
-.st-table{
-  width:100%;border-collapse:collapse;font-size:12px;
-}
-.st-table th{
-  padding:7px 10px;
-  text-align:left;
-  font-size:10px;font-weight:600;
-  letter-spacing:.08em;text-transform:uppercase;
-  color:var(--text3);
-  border-bottom:1px solid var(--border);
-}
-.st-table th.c,.st-table td.c{text-align:center}
-.st-table td{
-  padding:10px 10px;
-  border-bottom:1px solid var(--border);
-  color:var(--text2);
-  vertical-align:middle;
-}
-.st-table tr:last-child td{border-bottom:none}
-.st-table tr:hover td{background:rgba(255,255,255,.02)}
-.rank-num{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:16px;color:var(--text3);
-}
-.rank-1 .rank-num{color:var(--gold)}
-.rank-2 .rank-num{color:#c0c0c0}
-.rank-3 .rank-num{color:#cd7f32}
-.team-cell{font-weight:600;font-size:13px;color:var(--text)}
-.pts-cell{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:20px;color:var(--accent);
-}
-.bd-pos{color:var(--green)}
-.bd-neg{color:var(--red)}
-.tb-tag{
-  font-size:9px;font-weight:600;letter-spacing:.04em;
-  background:rgba(71,255,232,.1);color:var(--accent2);
-  border-radius:4px;padding:1px 5px;margin-left:5px;
-  vertical-align:middle;
-}
-
-/* loading/error */
-.state-msg{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:4rem 2rem;gap:12px;
-  color:var(--text3);font-size:13px;text-align:center;
-}
-.spinner{
-  width:28px;height:28px;
-  border:2px solid var(--border2);
-  border-top-color:var(--accent);
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.config-panel{
-  padding:1.5rem 0;
-  max-width:540px;
-}
-.config-panel h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
-.config-panel p{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6}
-.inp{
-  width:100%;
-  padding:10px 14px;font-size:13px;
-  border:1px solid var(--border2);border-radius:8px;
-  background:var(--surface);color:var(--text);
-  outline:none;margin-bottom:8px;
-  font-family:'DM Sans',sans-serif;
-}
-.inp:focus{border-color:rgba(232,255,71,.4)}
-.cfg-btn{
-  padding:9px 20px;font-size:13px;font-weight:600;
-  border:none;border-radius:8px;
-  background:var(--accent);color:#0a0a0f;
-  cursor:pointer;letter-spacing:.03em;
+/* SCHEDULE LIST */
+.sch-group{margin-bottom:1.5rem}
+.sch-group-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.sch-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  margin-bottom:6px;
   transition:opacity .2s;
 }
+.sch-row.done{opacity:.6}
+.sch-row.live-row{border-color:rgba(45,255,154,.3);}
+.sch-num{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--text3);min-width:20px}
+.sch-teams{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
+.sch-vs{font-size:11px;color:var(--text3);font-weight:400}
+.sch-score{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--text2);display:flex;align-items:center;gap:4px;margin-left:auto}
+.sch-score .sw{color:var(--accent)}
+.sch-done-tag{font-size:10px;font-weight:600;color:var(--green);background:rgba(45,255,154,.1);border:1px solid rgba(45,255,154,.2);border-radius:20px;padding:2px 8px;white-space:nowrap}
+.sch-live-tag{font-size:10px;font-weight:600;color:var(--green);background:rgba(45,255,154,.15);border:1px solid rgba(45,255,154,.3);border-radius:20px;padding:2px 8px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+
+/* STANDINGS */
+.standings-block{padding:1.5rem 0 0}
+.grp-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.st-wrap{overflow-x:auto;margin-bottom:2rem}
+.st-table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+.st-table thead tr{border-bottom:1px solid var(--border2)}
+.st-table th{padding:8px 14px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);text-align:left;white-space:nowrap}
+.st-table th.c{text-align:center}
+.st-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+.st-table tbody tr:last-child{border-bottom:none}
+.st-table tbody tr:hover{background:rgba(255,255,255,.02)}
+.st-table td{padding:13px 14px;vertical-align:middle}
+.st-table td.c{text-align:center}
+.rank-box{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;background:rgba(255,255,255,.04);color:var(--text3);margin:0 auto}
+.r1 .rank-box{background:rgba(255,209,102,.12);color:var(--gold)}
+.r2 .rank-box{background:rgba(200,200,200,.08);color:#c0c0c0}
+.r3 .rank-box{background:rgba(205,127,50,.08);color:#cd7f32}
+.team-cell-inner{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.tb-tag{font-size:9px;font-weight:600;letter-spacing:.04em;background:rgba(71,255,232,.1);color:var(--accent2);border-radius:4px;padding:1px 5px}
+.gp-val{font-size:13px;color:var(--text2)}
+.bw-val{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--green)}
+.bl-val{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red)}
+.diff-val{font-family:'Bebas Neue',sans-serif;font-size:20px}
+.diff-p{color:var(--green)}.diff-n{color:var(--red)}.diff-z{color:var(--text3)}
+.pts-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)}
+
+/* CONFIG */
+.config-panel{padding:1.5rem 0;max-width:540px}
+.config-panel h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.config-panel p{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6}
+.inp{width:100%;padding:10px 14px;font-size:13px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);outline:none;margin-bottom:8px;font-family:'DM Sans',sans-serif}
+.inp:focus{border-color:rgba(232,255,71,.4)}
+.cfg-btn{padding:9px 20px;font-size:13px;font-weight:600;border:none;border-radius:8px;background:var(--accent);color:#0a0a0f;cursor:pointer;transition:opacity .2s}
 .cfg-btn:hover{opacity:.85}
-.steps{
-  margin-top:1.5rem;
-  border:1px solid var(--border2);border-radius:10px;
-  overflow:hidden;
-}
-.step{
-  padding:12px 16px;border-bottom:1px solid var(--border);
-  display:flex;gap:12px;align-items:flex-start;
-  font-size:12px;line-height:1.6;color:var(--text2);
-}
+.steps{margin-top:1.5rem;border:1px solid var(--border2);border-radius:10px;overflow:hidden}
+.step{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;font-size:12px;line-height:1.6;color:var(--text2)}
 .step:last-child{border-bottom:none}
-.step-n{
-  font-family:'Bebas Neue',sans-serif;font-size:18px;
-  color:var(--accent);flex-shrink:0;line-height:1;margin-top:1px;
-}
+.step-n{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent);flex-shrink:0;line-height:1;margin-top:1px}
 .step b{color:var(--text);font-weight:600}
-.step code{
-  background:rgba(255,255,255,.06);
-  padding:1px 5px;border-radius:4px;
-  font-family:monospace;font-size:11px;color:var(--accent2);
+.step code{background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px;color:var(--accent2)}
+.state-msg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;gap:12px;color:var(--text3);font-size:13px;text-align:center}
+
+@media(max-width:640px){
+  .content{margin:0 .5rem;padding:0 .75rem 1.5rem}
+  .tabs{padding:1rem .5rem 0;gap:3px}
+  .tab{padding:7px 10px;font-size:11px}
+  header{padding:0 1rem}
+  .mc-name{font-size:12px}.mc-set-score{font-size:28px}
 }
+
+/* PLAYOFF BRACKET */
+.playoff-section{padding:1.5rem 0 0}
+.playoff-gender-block{margin-bottom:2.5rem}
+.playoff-gender-title{font-family:var(--fn-bebas);font-size:14px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.bracket-wrap{display:flex;gap:0;align-items:stretch;overflow-x:auto}
+.bracket-round{display:flex;flex-direction:column;justify-content:space-around;min-width:200px}
+.bracket-round-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);text-align:center;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.bracket-match{background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin:6px 8px;flex:1;max-height:90px}
+.bracket-match.live-card{border-color:rgba(45,255,154,.3)}
+.bracket-match.live-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--accent2))}
+.bracket-match.done-card{opacity:.8}
+.bm-team{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-bottom:1px solid var(--border)}
+.bm-team:last-child{border-bottom:none}
+.bm-name{font-size:12px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bm-name.tbd{color:var(--text3);font-weight:400;font-style:italic}
+.bm-name.win{color:var(--accent)}
+.bm-score{font-family:var(--fn-bebas);font-size:18px;color:var(--text2);min-width:20px;text-align:right}
+.bm-score.win{color:var(--accent)}
+.bracket-connector{display:flex;flex-direction:column;justify-content:space-around;width:24px;align-self:stretch}
+.connector-line{flex:1;border-right:1px solid var(--border2)}
+.connector-mid{border-top:1px solid var(--border2);width:100%}
+.not-started-badge{font-size:9px;color:var(--text3);text-align:center;padding:2px 0}
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">
     <div class="logo-icon">🏐</div>
@@ -341,55 +198,47 @@ header{
   </div>
   <div style="display:flex;align-items:center;gap:16px">
     <span class="last-update" id="last-update"></span>
-    <div class="live-badge" id="live-badge" style="display:none">
-      <div class="live-dot"></div>LIVE
-    </div>
+    <div class="live-badge" id="live-badge" style="display:none"><div class="live-dot"></div>LIVE</div>
   </div>
 </header>
-
 <div class="tabs">
-  <button class="tab active" onclick="showTab('matches')">Тоглолтууд</button>
-  <button class="tab" onclick="showTab('standings')">Хүснэгт</button>
+  <button class="tab active" onclick="showTab('standings')">Хүснэгт</button>
+  <button class="tab" onclick="showTab('schedule')">Тоглолтын хуваарь</button>
+  <button class="tab" onclick="showTab('results')">Тоглолтын үр дүн</button>
+  <button class="tab" onclick="showTab('playoff')">Плей-офф</button>
   <button class="tab" onclick="showTab('config')">⚙ Тохиргоо</button>
 </div>
-
 <div class="content">
-  <div id="sec-matches" class="section show">
-    <div id="matches-content"></div>
-  </div>
-  <div id="sec-standings" class="section">
-    <div id="standings-content"></div>
-  </div>
+  <div id="sec-standings" class="section show"><div id="standings-content"></div></div>
+  <div id="sec-schedule" class="section"><div id="schedule-content"></div></div>
+  <div id="sec-results" class="section"><div id="results-content"></div></div>
+  <div id="sec-playoff" class="section"><div id="playoff-content"></div></div>
   <div id="sec-config" class="section">
-    <div class="config-panel">
+    <div class="config-panel"><div id="save-msg" style="display:none;background:rgba(45,255,154,.15);border:1px solid rgba(45,255,154,.3);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--green);margin-bottom:12px;">✓ Амжилттай хадгалагдлаа! Мэдээлэл ачаалж байна...</div>
       <h3>Google Sheets холболт</h3>
-      <p>CSV export link-ийг доор оруулна уу. Хадгалсны дараа сайт автоматаар уншина.</p>
-      <input class="inp" id="csv-url" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=..."/>
+      <p>CSV export линкийг доор оруулна уу. Сайт 30 секунд тутам автоматаар шинэчлэгдэнэ.</p>
+      <input class="inp" id="csv-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"/>
       <button class="cfg-btn" onclick="saveConfig()">Хадгалах &amp; Ачаалах</button>
-
       <div class="steps">
-        <div class="step"><div class="step-n">1</div><div>Google Sheets-ийг нээж <b>File → Share → Publish to web</b> дарна</div></div>
-        <div class="step"><div class="step-n">2</div><div><b>Link</b> таб → <b>Entire document → CSV</b> сонгоод <b>Publish</b> дарна</div></div>
-        <div class="step"><div class="step-n">3</div><div>Гарсан линкийг дээрх талбарт хуулж оруулна</div></div>
-        <div class="step"><div class="step-n">4</div><div>Sheets-ийн баганын дараалал:<br>
-          <code>Бүлэг</code> <code>Баг1</code> <code>Баг2</code> <code>С1_Б1</code> <code>С1_Б2</code> <code>С2_Б1</code> <code>С2_Б2</code> <code>С3_Б1</code> <code>С3_Б2</code> <code>Төлөв</code>
+        <div class="step"><div class="step-n">1</div><div>Google Sheets → <b>File → Share → Publish to web</b></div></div>
+        <div class="step"><div class="step-n">2</div><div><b>Link → Entire document → CSV → Publish</b> дарна</div></div>
+        <div class="step"><div class="step-n">3</div><div>Гарсан линкийг дээр оруулна уу</div></div>
+        <div class="step"><div class="step-n">4</div><div>Sheets баганы дараалал:<br>
+          <code>Ангилал</code> <code>Бүлэг</code> <code>Баг1</code> <code>Баг2</code> <code>С1_Б1</code> <code>С1_Б2</code> <code>С2_Б1</code> <code>С2_Б2</code> <code>С3_Б1</code> <code>С3_Б2</code> <code>Төлөв</code><br>
+          Ангилал: <code>Эр</code> эсвэл <code>Эм</code>
         </div></div>
-        <div class="step"><div class="step-n">5</div><div>Сайт <b>30 секунд</b> тутам автоматаар шинэчлэгдэнэ</div></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const SET_PTS=[1,1,0.5];
+const SET_PTS=[1,1,0.5]; // unused - match points now based on set ratio
 const PT_WIN=21,PT_WIN3=15,PT_MARGIN=2;
-
 let csvUrl=localStorage.getItem('vb_csv_url')||'';
-let allMatches=[];
-let curTab='matches';
-let refreshTimer=null;
+let allMatches=[],curTab='standings',curGender='all',refreshTimer=null;
 
-function ptToWin(si){return si===2?PT_WIN3:PT_WIN;}
+function ptToWin(si){return si===2?PT_WIN3:PT_WIN}
 function setWinner(s,si){
   const[a,b]=s[si],pw=ptToWin(si);
   if(a>=pw&&a-b>=PT_MARGIN)return 1;
@@ -419,149 +268,257 @@ function isDone(m){
   const[w1,w2]=setsWon(m);
   return w1===2||w2===2||(w1===1&&w2===1&&setWinner(m.sets,2)!==0);
 }
-
 function parseCSV(text){
   const lines=text.trim().split('\n').filter(l=>l.trim());
   if(lines.length<2)return[];
-  const rows=lines.slice(1);
-  return rows.map(row=>{
+  return lines.slice(1).map(row=>{
     const cols=row.split(',').map(c=>c.trim().replace(/^"|"$/g,''));
     const n=v=>parseInt(v)||0;
-    return{
-      group:cols[0]||'А бүлэг',
-      t1:cols[1]||'Баг 1',
-      t2:cols[2]||'Баг 2',
-      sets:[
-        [n(cols[3]),n(cols[4])],
-        [n(cols[5]),n(cols[6])],
-        [n(cols[7]),n(cols[8])]
-      ],
-      statusRaw:(cols[9]||'').toLowerCase()
+    const gender=(cols[1]||'').trim();
+    const round=parseInt(cols[0])||0;
+    const m={
+      round:round,
+      gender:gender,
+      group:cols[2]||'А бүлэг',
+      t1:cols[3]||'Баг 1',t2:cols[4]||'Баг 2',
+      sets:[[n(cols[5]),n(cols[6])],[n(cols[7]),n(cols[8])],[n(cols[9]),n(cols[10])]],
+      statusRaw:(cols[11]||'').toLowerCase()
     };
-  }).filter(m=>m.t1&&m.t2).map(m=>{
-    const done=m.statusRaw==='дууссан'||m.statusRaw==='done'||isDone(m);
-    const live=m.statusRaw==='live'||m.statusRaw==='явагдаж байна'||
-      (!done&&(m.sets[0][0]>0||m.sets[0][1]>0));
-    return{...m,status:done?'done':live?'live':'wait'};
-  });
+    const explicitDone=m.statusRaw==='дууссан'||m.statusRaw==='done';
+    const explicitLive=m.statusRaw==='live'||m.statusRaw==='явагдаж байна';
+    const autoDone=isDone(m);
+    // Explicit status takes priority; auto-detect done from scores
+    const status=explicitLive?'live':(explicitDone||autoDone)?'done':'wait';
+    return{...m,status};
+  }).filter(m=>m.t1&&m.t2);
 }
 
 async function fetchData(){
-  if(!csvUrl){
-    showStaticDemo();return;
+  if(!csvUrl){showDemo();return;}
+  function isCSV(text){
+    if(!text||text.length<10)return false;
+    const first=text.trim().split('\n')[0]||'';
+    return first.includes(',')&&!first.includes('<');
   }
-  const proxyUrl=`https://corsproxy.io/?${encodeURIComponent(csvUrl)}`;
-  try{
-    const r=await fetch(proxyUrl,{cache:'no-store'});
-    if(!r.ok)throw new Error('fetch failed');
-    const text=await r.text();
-    allMatches=parseCSV(text);
-    renderAll();
-    document.getElementById('last-update').textContent='Шинэчлэгдсэн: '+new Date().toLocaleTimeString('mn-MN');
-    const hasLive=allMatches.some(m=>m.status==='live');
-    document.getElementById('live-badge').style.display=hasLive?'flex':'none';
-  }catch(e){
-    showError();
+  // Google Apps Script бол шууд, эс бол proxy ашиглана
+  const isScript=csvUrl.includes('script.google.com');
+  const urls=isScript
+    ?[csvUrl]
+    :[csvUrl,'https://corsproxy.io/?'+encodeURIComponent(csvUrl),'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl)];
+  for(const url of urls){
+    try{
+      const r=await fetch(url,{cache:'no-store'});
+      if(!r.ok)continue;
+      const text=await r.text();
+      if(!isCSV(text))continue;
+      allMatches=parseCSV(text);
+      renderAll();
+      document.getElementById('last-update').textContent='Шинэчлэгдсэн: '+new Date().toLocaleTimeString('mn-MN');
+      document.getElementById('live-badge').style.display=allMatches.some(m=>m.status==='live')?'flex':'none';
+      return;
+    }catch(e){continue;}
   }
+  ['standings','results','schedule','playoff'].forEach(s=>{
+    const el=document.getElementById(s+'-content');
+    if(el)el.innerHTML='<div class="state-msg"><div style="font-size:24px">⚠</div><div>CSV татахад алдаа гарлаа</div><div style="font-size:11px;margin-top:4px">Тохиргоо хэсгийн линкийг шалгана уу</div></div>';
+  });
 }
 
-function showStaticDemo(){
+function showDemo(){
   allMatches=[
-    {group:'А бүлэг',t1:'Хаан',t2:'Аргал',sets:[[25,18],[22,25],[15,10]],status:'done'},
-    {group:'А бүлэг',t1:'Эрчим',t2:'Улаан од',sets:[[14,16],[0,0],[0,0]],status:'live'},
-    {group:'Б бүлэг',t1:'Номин',t2:'Тэнгэр',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    {group:'Б бүлэг',t1:'Захиргаа',t2:'Нарс',sets:[[25,20],[25,22],[0,0]],status:'done'},
+    // Эрэгтэй А бүлэг
+    {round:1,gender:'Эр',group:'А бүлэг',t1:'Хаан',t2:'Аргал',sets:[[25,18],[22,25],[15,10]],status:'done'},
+    {round:1,gender:'Эр',group:'А бүлэг',t1:'Эрчим',t2:'Улаан од',sets:[[25,20],[18,25],[0,0]],status:'done'},
+    {round:1,gender:'Эр',group:'Б бүлэг',t1:'Нар',t2:'Тэнгэр',sets:[[25,22],[25,19],[0,0]],status:'done'},
+    {round:1,gender:'Эр',group:'Б бүлэг',t1:'Гал',t2:'Ус',sets:[[20,25],[25,23],[12,15]],status:'done'},
+    {round:2,gender:'Эм',group:'А бүлэг',t1:'Номин',t2:'Тэнгэр',sets:[[25,22],[23,25],[12,15]],status:'done'},
+    {round:2,gender:'Эм',group:'А бүлэг',t1:'Захиргаа',t2:'Нарс',sets:[[25,18],[25,20],[0,0]],status:'done'},
+    {round:2,gender:'Эм',group:'Б бүлэг',t1:'Аяга',t2:'Цэцэг',sets:[[14,16],[8,3],[0,0]],status:'live'},
+    {round:2,gender:'Эм',group:'Б бүлэг',t1:'Нарс',t2:'Сар',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'А бүлэг',t1:'Хаан',t2:'Улаан од',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'А бүлэг',t1:'Аргал',t2:'Эрчим',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'Б бүлэг',t1:'Нар',t2:'Ус',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'Б бүлэг',t1:'Тэнгэр',t2:'Гал',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'А бүлэг',t1:'Номин',t2:'Нарс',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'А бүлэг',t1:'Тэнгэр',t2:'Захиргаа',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'Б бүлэг',t1:'Цэцэг',t2:'Нарс',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'Б бүлэг',t1:'Аяга',t2:'Сар',sets:[[0,0],[0,0],[0,0]],status:'wait'},
   ];
   renderAll();
   document.getElementById('last-update').textContent='⚠ Demo горим';
   document.getElementById('live-badge').style.display='flex';
 }
 
-function renderAll(){
-  if(curTab==='matches')renderMatches();
-  if(curTab==='standings')renderStandings();
+function genderBadge(g){
+  if(!g)return'';
+  const isM=g==='Эр';
+  return'<span class="g-badge '+(isM?'g-m':'g-f')+'">'+g+'</span>';
 }
 
-function renderMatches(){
-  const c=document.getElementById('matches-content');
-  if(!allMatches.length){
-    c.innerHTML=`<div class="state-msg"><div>Тоглолтын мэдээлэл олдсонгүй</div><div style="font-size:11px">Тохиргоо хэсгийг шалгана уу</div></div>`;
-    return;
+function filteredMatches(){
+  if(curGender==='all')return allMatches;
+  if(curGender==='m')return allMatches.filter(m=>m.gender==='Эр');
+  return allMatches.filter(m=>m.gender==='Эм');
+}
+
+function genderFilterHTML(tab){
+  const hasM=allMatches.some(m=>m.gender==='Эр');
+  const hasF=allMatches.some(m=>m.gender==='Эм');
+  if(!hasM&&!hasF)return'';
+  return '<div class="gender-filter" id="gf-'+tab+'">'
+    +'<button class="gf-btn'+(curGender==='all'?' active-all':'')+'" data-g="all" data-t="'+tab+'">Бүгд</button>'
+    +(hasM?'<button class="gf-btn'+(curGender==='m'?' active-m':'')+'" data-g="m" data-t="'+tab+'">Эрэгтэй</button>':'')
+    +(hasF?'<button class="gf-btn'+(curGender==='f'?' active-f':'')+'" data-g="f" data-t="'+tab+'">Эмэгтэй</button>':'')
+    +'</div>';
+}
+
+function setGender(g,tab){
+  curGender=g;
+  if(tab==='results')renderResults();
+  if(tab==='schedule')renderSchedule();
+  if(tab==='standings')renderStandings();
+}
+
+function matchCardHTML(m,showGroup){
+  const[sw1,sw2]=setsWon(m);
+  const done=isDone(m);
+  const win1=done&&sw1>sw2,win2=done&&sw2>sw1;
+  const sw=[setWinner(m.sets,0),setWinner(m.sets,1),setWinner(m.sets,2)];
+  let playedSets=0;
+  for(let i=0;i<3;i++){if(sw[i]||m.sets[i][0]>0||m.sets[i][1]>0)playedSets=i+1;}
+  if(m.status==='wait')playedSets=0;
+
+  const BN="font-family:var(--fn-bebas)";
+  const sp=m.status==='live'
+    ?'<span class="mc-status s-live">&#9679; Live</span>'
+    :m.status==='done'
+    ?'<span class="mc-status s-done">Дууссан</span>'
+    :'<span class="mc-status s-wait">Удахгүй</span>';
+  const grpLine=showGroup?'<span class="mc-group">'+genderBadge(m.gender)+' '+m.group+'</span>':'';
+
+  const cols='1fr 48px 40px 40px 40px';
+  const gridDiv='display:grid;grid-template-columns:'+cols+';gap:4px;align-items:center;';
+
+  const hCell=function(txt){return '<div style="'+BN+';font-size:11px;color:var(--text3);text-align:center;">'+txt+'</div>';};
+  const headerRow='<div style="'+gridDiv+'margin-bottom:4px;"><div></div>'+hCell('Сет')+hCell('С1')+hCell('С2')+hCell('С3')+'</div>';
+
+  function scoreCell(val,isWin,played){
+    if(!played)return '<div style="'+BN+';font-size:20px;text-align:center;color:var(--text3);opacity:.25;">&#8212;</div>';
+    const bg=isWin?'background:rgba(232,255,71,.07);border-radius:4px;':'';
+    const col=isWin?'color:var(--accent)':'color:var(--text2)';
+    return '<div style="'+BN+';font-size:22px;text-align:center;'+col+';'+bg+'">'+val+'</div>';
   }
-  const groups=[...new Set(allMatches.map(m=>m.group))];
-  let html='';
-  groups.forEach(grp=>{
-    html+=`<div class="group-block"><div class="group-name">${grp}</div><div class="matches-grid">`;
-    allMatches.filter(m=>m.group===grp).forEach(m=>{
-      const[sw1,sw2]=setsWon(m);
-      const[mp1,mp2]=matchPts(m);
-      const[b1,b2]=totalBalls(m);
-      const done=isDone(m);
-      const win1=done&&mp1>mp2,win2=done&&mp2>mp1;
-      const curSet=done?2:m.sets.findIndex((s,i)=>!setWinner(m.sets,i)&&i<3);
-      const si=Math.min(curSet<0?2:curSet,2);
 
-      let setsHtml='';
-      const maxS=done?3:si+1;
-      for(let i=0;i<maxS;i++){
-        const sw=setWinner(m.sets,i);
-        const isCur=i===si&&!done&&m.status!=='wait';
-        const ptL=sw?`<span class="sp">${SET_PTS[i]}</span>`:'';
-        setsHtml+=`<div class="set-p${isCur?' cur':''}">
-          <span style="opacity:.5">${i+1}s</span>
-          <b>${m.sets[i][0]}</b><span style="opacity:.3">:</span><b>${m.sets[i][1]}</b>
-          ${ptL}
-        </div>`;
-      }
+  function teamRow(name,setScore,isWin,sets,winArr){
+    const nc=isWin?'color:var(--accent)':'color:var(--text)';
+    const sc=isWin?'color:var(--accent)':'color:var(--text2)';
+    let row='<div style="'+gridDiv+'margin-bottom:3px;">'+
+      '<div style="font-size:14px;font-weight:600;'+nc+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+name+'</div>'+
+      '<div style="'+BN+';font-size:28px;text-align:center;'+sc+';">'+setScore+'</div>';
+    for(let i=0;i<3;i++){row+=scoreCell(sets[i],winArr[i],i<playedSets);}
+    row+='</div>';
+    return row;
+  }
 
-      const statusPill=m.status==='live'
-        ?'<span class="status-pill s-live">● Live</span>'
-        :m.status==='done'
-        ?'<span class="status-pill s-done">Дууссан</span>'
-        :'<span class="status-pill s-wait">Хүлээгдэж байна</span>';
+  const sw1arr=[sw[0]===1,sw[1]===1,sw[2]===1];
+  const sw2arr=[sw[0]===2,sw[1]===2,sw[2]===2];
+  const s1=[m.sets[0][0],m.sets[1][0],m.sets[2][0]];
+  const s2=[m.sets[0][1],m.sets[1][1],m.sets[2][1]];
 
-      html+=`<div class="match-card${m.status==='live'?' live-card':m.status==='done'?' done-card':''}">
-        <div class="card-top">
-          <span class="card-round">BO3</span>
-          ${statusPill}
-        </div>
-        <div class="versus">
-          <div class="t-side">
-            <div class="t-name">${m.t1}</div>
-            <div class="t-meta"><b>${mp1}</b> оноо · ${b1} бөмбөг</div>
-            <div class="t-sets${win1?' win':''}">${sw1}</div>
-          </div>
-          <div class="mid-col">
-            <span class="mid-vs">сет</span>
-            <span class="mid-balls">${b1}:${b2}</span>
-          </div>
-          <div class="t-side">
-            <div class="t-name">${m.t2}</div>
-            <div class="t-meta"><b>${mp2}</b> оноо · ${b2} бөмбөг</div>
-            <div class="t-sets${win2?' win':''}">${sw2}</div>
-          </div>
-        </div>
-        <div class="set-pills">${setsHtml}</div>
-      </div>`;
+  return '<div class="match-card'+(m.status==='live'?' live-card':m.status==='done'?' done-card':' wait-card')+'">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px 0;">'+sp+grpLine+'</div>'+
+    '<div style="padding:8px 14px 12px;">'+headerRow+teamRow(m.t1,sw1,win1,s1,sw1arr)+teamRow(m.t2,sw2,win2,s2,sw2arr)+'</div>'+
+  '</div>';
+}
+
+function renderResults(){
+  const c=document.getElementById('results-content');
+  const ms=filteredMatches();
+  if(!allMatches.length){c.innerHTML='<div class="state-msg"><div>Тоглолтын мэдээлэл олдсонгүй</div></div>';return;}
+  const live=ms.filter(m=>m.status==='live');
+  const done=ms.filter(m=>m.status==='done');
+  const wait=ms.filter(m=>m.status==='wait');
+  let html=genderFilterHTML('results');
+  html+='<div class="status-section"><div class="status-title"><div class="dot-live"></div><span class="label-live">Одоо явагдаж байна</span></div>';
+  if(live.length)live.forEach(m=>{html+=matchCardHTML(m,true);});
+  else html+='<div class="empty-status">Одоо явагдаж байгаа тоглолт байхгүй</div>';
+  html+='</div>';
+  html+='<div class="status-section"><div class="status-title"><div class="dot-done"></div><span class="label-done">Дууссан тоглолтууд</span></div>';
+  if(done.length)[...done].reverse().forEach(m=>{html+=matchCardHTML(m,true);});
+  else html+='<div class="empty-status">Дууссан тоглолт байхгүй</div>';
+  html+='</div>';
+  html+='<div class="status-section"><div class="status-title"><div class="dot-wait"></div><span class="label-wait">Удахгүй болох тоглолтууд</span></div>';
+  if(wait.length)wait.forEach(m=>{html+=matchCardHTML(m,true);});
+  else html+='<div class="empty-status">Хүлээгдэж байгаа тоглолт байхгүй</div>';
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function renderSchedule(){
+  const c=document.getElementById('schedule-content');
+  if(!allMatches.length){c.innerHTML='<div class="state-msg"><div>Тоглолтын мэдээлэл олдсонгүй</div></div>';return;}
+  const ms=filteredMatches().filter(m=>m.round>0);
+  if(!ms.length){c.innerHTML='<div class="state-msg"><div>Тоглолт байхгүй</div></div>';return;}
+
+  let html=genderFilterHTML('schedule');
+  const rounds=[...new Set(ms.map(m=>m.round))].sort((a,b)=>a-b);
+  let num=1;
+
+  rounds.forEach(rnd=>{
+    const rms=ms.filter(m=>m.round===rnd);
+    html+='<div style="margin-bottom:1.5rem;padding-top:1.25rem">';
+    html+='<div style="font-family:var(--fn-bebas);font-size:13px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:10px;">'+rnd+'-р ээлж</div>';
+
+    // Group by gender+group within round
+    const genders=[...new Set(rms.map(m=>m.gender))];
+    genders.forEach(gen=>{
+      const gms=rms.filter(m=>m.gender===gen);
+      const groups=[...new Set(gms.map(m=>m.group))];
+      groups.forEach(grp=>{
+        const grpMs=gms.filter(m=>m.group===grp);
+        if(groups.length>1||genders.length>1){
+          html+='<div style="display:flex;align-items:center;gap:6px;margin:6px 0 4px;">'+genderBadge(gen)+'<span style="font-size:11px;color:var(--text3);">'+grp+'</span></div>';
+        }
+        grpMs.forEach(m=>{
+          const[sw1,sw2]=setsWon(m);
+          const done=isDone(m);
+          const win1=done&&sw1>sw2,win2=done&&sw2>sw1;
+          let right='';
+          if(m.status==='live'){
+            right='<span class="sch-live-tag"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.4s infinite;margin-right:4px"></span>Live</span>';
+          } else if(done){
+            right='<span class="sch-score"><span class="'+(win1?'sw':'')+'">'+sw1+'</span><span style="opacity:.4;font-size:12px;margin:0 2px">:</span><span class="'+(win2?'sw':'')+'">'+sw2+'</span></span>'+
+              '<span class="sch-done-tag">&#10003; Дууссан</span>';
+          }
+          html+='<div class="sch-row'+(done?' done':m.status==='live'?' live-row':'')+'">'+
+            '<div class="sch-num">'+num+'</div>'+
+            '<div class="sch-teams">'+
+              '<span style="color:'+(win1?'var(--accent)':'inherit')+'">'+m.t1+'</span>'+
+              '<span class="sch-vs">vs</span>'+
+              '<span style="color:'+(win2?'var(--accent)':'inherit')+'">'+m.t2+'</span>'+
+            '</div>'+
+            right+
+          '</div>';
+          num++;
+        });
+      });
     });
-    html+=`</div></div>`;
+    html+='</div>';
   });
+
   c.innerHTML=html;
 }
 
 function buildStats(gms){
   const tm={};
   gms.forEach(m=>{
-    [m.t1,m.t2].forEach(t=>{if(!tm[t])tm[t]={name:t,gp:0,w:0,l:0,pts:0,sw:0,sl:0,bw:0,bl:0};});
+    [m.t1,m.t2].forEach(t=>{if(!tm[t])tm[t]={name:t,gp:0,pts:0,bw:0,bl:0};});
     if(!isDone(m))return;
-    const[p1,p2]=matchPts(m);const[sw1,sw2]=setsWon(m);const[b1,b2]=totalBalls(m);
+    const[p1,p2]=matchPts(m);const[b1,b2]=totalBalls(m);
     tm[m.t1].gp++;tm[m.t2].gp++;
     tm[m.t1].pts+=p1;tm[m.t2].pts+=p2;
-    tm[m.t1].sw+=sw1;tm[m.t1].sl+=sw2;
-    tm[m.t2].sw+=sw2;tm[m.t2].sl+=sw1;
     tm[m.t1].bw+=b1;tm[m.t1].bl+=b2;
     tm[m.t2].bw+=b2;tm[m.t2].bl+=b1;
-    if(p1>p2){tm[m.t1].w++;tm[m.t2].l++;}else{tm[m.t2].w++;tm[m.t1].l++;}
   });
   return tm;
 }
@@ -589,74 +546,235 @@ function getReason(t,prev,tm,gms){
 
 function renderStandings(){
   const c=document.getElementById('standings-content');
-  const groups=[...new Set(allMatches.map(m=>m.group))];
-  if(!allMatches.length){c.innerHTML=`<div class="state-msg"><div>Мэдээлэл байхгүй</div></div>`;return;}
-  let html='';
-  groups.forEach(grp=>{
-    const gms=allMatches.filter(m=>m.group===grp);
-    const tm=buildStats(gms);const names=Object.keys(tm);if(!names.length)return;
-    const sorted=sortTeams(names,tm,gms);
-    html+=`<div class="standings-block"><div class="standings-title">${grp}</div>
-    <table class="st-table" style="margin-bottom:1.5rem">
-      <thead><tr>
-        <th style="width:32px">#</th><th>Баг</th>
-        <th class="c" style="width:32px">Т</th><th class="c" style="width:32px">Я</th><th class="c" style="width:32px">Х</th>
-        <th class="c" style="width:36px">С+</th><th class="c" style="width:36px">С-</th>
-        <th class="c" style="width:36px">Б+</th><th class="c" style="width:36px">Б-</th>
-        <th class="c" style="width:48px">Бзөр</th>
-        <th class="c" style="width:52px">Оноо</th>
-      </tr></thead><tbody>`;
-    sorted.forEach((t,i)=>{
-      const bd=t.bw-t.bl;
-      const reason=i>0?getReason(t.name,sorted[i-1].name,tm,gms):'';
-      const rb=reason?`<span class="tb-tag">${reason}</span>`:'';
-      html+=`<tr class="rank-${i+1}">
-        <td class="c rank-num">${i+1}</td>
-        <td class="team-cell">${t.name}${rb}</td>
-        <td class="c">${t.gp}</td><td class="c">${t.w}</td><td class="c">${t.l}</td>
-        <td class="c">${t.sw}</td><td class="c">${t.sl}</td>
-        <td class="c">${t.bw}</td><td class="c">${t.bl}</td>
-        <td class="c ${bd>0?'bd-pos':bd<0?'bd-neg':''}">${bd>0?'+'+bd:bd}</td>
-        <td class="c pts-cell">${t.pts}</td>
-      </tr>`;
+  if(!allMatches.length){c.innerHTML='<div class="state-msg"><div>Мэдээлэл байхгүй</div></div>';return;}
+  const ms=filteredMatches();
+  const genders=[...new Set(ms.map(m=>m.gender))];
+  let html=genderFilterHTML('standings');
+  genders.forEach(gen=>{
+    const genderMs=ms.filter(m=>m.gender===gen);
+    const groups=[...new Set(genderMs.map(m=>m.group))];
+    groups.forEach(grp=>{
+      const gms=genderMs.filter(m=>m.group===grp);
+      const tm=buildStats(gms);const names=Object.keys(tm);if(!names.length)return;
+      const sorted=sortTeams(names,tm,gms);
+      html+='<div class="standings-block"><div class="grp-title">'+genderBadge(gen)+'<span>'+grp+'</span></div>'+
+        '<div class="st-wrap"><table class="st-table">'+
+        '<thead><tr>'+
+          '<th class="c" style="width:52px">#</th><th>Баг</th>'+
+          '<th class="c" style="width:80px">Тоглолт</th>'+
+          '<th class="c" style="width:110px">Авсан бөмбөг</th>'+
+          '<th class="c" style="width:110px">Алдсан бөмбөг</th>'+
+          '<th class="c" style="width:72px">+/-</th>'+
+          '<th class="c" style="width:80px">Оноо</th>'+
+        '</tr></thead><tbody>';
+      sorted.forEach((t,i)=>{
+        const bd=t.bw-t.bl;
+        const reason=i>0?getReason(t.name,sorted[i-1].name,tm,gms):'';
+        const rb=reason?'<span class="tb-tag">'+reason+'</span>':'';
+        const dc=bd>0?'diff-p':bd<0?'diff-n':'diff-z';
+        html+='<tr class="r'+(i+1)+'">'+
+          '<td class="c"><div class="rank-box">'+(i+1)+'</div></td>'+
+          '<td><div class="team-cell-inner">'+t.name+rb+'</div></td>'+
+          '<td class="c"><span class="gp-val">'+t.gp+'</span></td>'+
+          '<td class="c"><span class="bw-val">'+t.bw+'</span></td>'+
+          '<td class="c"><span class="bl-val">'+t.bl+'</span></td>'+
+          '<td class="c"><span class="diff-val '+dc+'">'+(bd>0?'+'+bd:bd)+'</span></td>'+
+          '<td class="c"><span class="pts-val">'+t.pts+'</span></td>'+
+        '</tr>';
+      });
+      html+='</tbody></table></div></div>';
     });
-    html+=`</tbody></table></div>`;
   });
-  c.innerHTML=html||`<div class="state-msg"><div>Дууссан тоглолт байхгүй</div></div>`;
+  if(!ms.length)html+='<div class="state-msg"><div>Тоглолт байхгүй</div></div>';
+  c.innerHTML=html;
 }
 
-function showError(){
-  document.getElementById('matches-content').innerHTML=`<div class="state-msg">
-    <div style="font-size:24px">⚠</div>
-    <div>CSV татахад алдаа гарлаа</div>
-    <div style="font-size:11px">Тохиргоо хэсгийн линкийг шалгана уу</div>
-  </div>`;
+function renderAll(){
+  if(curTab==='results')renderResults();
+  if(curTab==='schedule')renderSchedule();
+  if(curTab==='standings')renderStandings();
 }
-
 function saveConfig(){
   const v=document.getElementById('csv-url').value.trim();
   if(!v){alert('Линк оруулна уу');return;}
-  csvUrl=v;
-  localStorage.setItem('vb_csv_url',v);
-  showTab('matches');
+  csvUrl=v;localStorage.setItem('vb_csv_url',v);
   fetchData();
+  document.getElementById('save-msg').style.display='block';
+  setTimeout(()=>document.getElementById('save-msg').style.display='none',3000);
 }
-
 function showTab(t){
   curTab=t;
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['matches','standings','config'][i]===t));
-  ['matches','standings','config'].forEach(s=>document.getElementById('sec-'+s).classList.toggle('show',s===t));
-  if(t==='matches')renderMatches();
-  if(t==='standings')renderStandings();
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['standings','schedule','results','playoff','config'][i]===t));
+  ['standings','schedule','results','playoff','config'].forEach(s=>document.getElementById('sec-'+s).classList.toggle('show',s===t));
+  renderAll();
   if(t==='config'&&csvUrl)document.getElementById('csv-url').value=csvUrl;
 }
 
-function startRefresh(){
-  clearInterval(refreshTimer);
-  fetchData();
-  refreshTimer=setInterval(fetchData,30000);
+function getGroupRankings(gender, group){
+  const gms = allMatches.filter(m=>m.gender===gender&&m.group===group&&isDone(m));
+  const tm={};
+  gms.forEach(m=>{
+    [m.t1,m.t2].forEach(t=>{if(!tm[t])tm[t]={name:t,gp:0,pts:0,bw:0,bl:0};});
+    const[p1,p2]=matchPts(m);const[b1,b2]=totalBalls(m);
+    tm[m.t1].gp++;tm[m.t2].gp++;
+    tm[m.t1].pts+=p1;tm[m.t2].pts+=p2;
+    tm[m.t1].bw+=b1;tm[m.t1].bl+=b2;
+    tm[m.t2].bw+=b2;tm[m.t2].bl+=b1;
+  });
+  const names=Object.keys(tm);
+  return sortTeams(names,tm,gms);
 }
 
+function bracketMatchHTML(t1name,t2name,sets,status,label){
+  const done=status==='done';
+  const live=status==='live';
+  const sw=[setWinner(sets,0),setWinner(sets,1),setWinner(sets,2)];
+  let w1=0,w2=0;
+  for(let i=0;i<3;i++){if(sw[i]===1)w1++;else if(sw[i]===2)w2++;}
+  const win1=done&&w1>w2,win2=done&&w2>w1;
+  const tbd1=!t1name,tbd2=!t2name;
+
+  const scoreStr=(w)=>done?String(w):(live?String(w):'');
+
+  return '<div class="bracket-match'+(live?' live-card':done?' done-card':'')+'" style="position:relative">'+
+    (label?'<div style="font-size:9px;color:var(--text3);text-align:center;padding:3px 0;border-bottom:1px solid var(--border);letter-spacing:.04em;">'+label+'</div>':'')+
+    '<div class="bm-team">'+
+      '<div class="bm-name'+(tbd1?' tbd':win1?' win':'')+'">'+( t1name||'Тодорхойгүй')+'</div>'+
+      '<div class="bm-score'+(win1?' win':'')+'">'+scoreStr(w1)+'</div>'+
+    '</div>'+
+    '<div class="bm-team">'+
+      '<div class="bm-name'+(tbd2?' tbd':win2?' win':'')+'">'+( t2name||'Тодорхойгүй')+'</div>'+
+      '<div class="bm-score'+(win2?' win':'')+'">'+scoreStr(w2)+'</div>'+
+    '</div>'+
+  '</div>';
+}
+
+function getMatchWinner(m){
+  if(!m||!isDone(m))return null;
+  const[sw1,sw2]=setsWon(m);
+  return sw1>sw2?m.t1:m.t2;
+}
+function getMatchLoser(m){
+  if(!m||!isDone(m))return null;
+  const[sw1,sw2]=setsWon(m);
+  return sw1>sw2?m.t2:m.t1;
+}
+
+function findPlayoffMatch(gender,label){
+  return allMatches.find(m=>m.gender===gender&&m.group===label)||null;
+}
+
+function renderPlayoff(){
+  const c=document.getElementById('playoff-content');
+  if(!allMatches.length){c.innerHTML='<div class="state-msg"><div>Мэдээлэл байхгүй</div></div>';return;}
+  const genders=[...new Set(allMatches.map(m=>m.gender))];
+  let html='<div class="playoff-section">';
+
+  genders.forEach(gen=>{
+    const groups=[...new Set(allMatches.filter(m=>m.gender===gen&&m.group!=='Хагас финал'&&m.group!=='Финал'&&m.group!=='3-р байр').map(m=>m.group))];
+    if(groups.length<2)return;
+
+    // Get top 2 from each group
+    const r=[];
+    groups.forEach(grp=>{
+      const ranked=getGroupRankings(gen,grp);
+      r.push(ranked.map(t=>t?t.name:null));
+    });
+    const A1=r[0]&&r[0][0]?r[0][0]:null;
+    const A2=r[0]&&r[0][1]?r[0][1]:null;
+    const B1=r[1]&&r[1][0]?r[1][0]:null;
+    const B2=r[1]&&r[1][1]?r[1][1]:null;
+
+    // Playoff matches from sheets
+    const sf1=findPlayoffMatch(gen,'Хагас финал 1')||findPlayoffMatch(gen,'Хагас финал');
+    const sf2=findPlayoffMatch(gen,'Хагас финал 2');
+    const fin=findPlayoffMatch(gen,'Финал');
+    const third=findPlayoffMatch(gen,'3-р байр');
+
+    // SF teams: A1 vs B2, B1 vs A2
+    const sf1t1=sf1?sf1.t1:A1, sf1t2=sf1?sf1.t2:B2;
+    const sf2t1=sf2?sf2.t1:(sf1&&!sf2?null:B1), sf2t2=sf2?sf2.t2:(sf1&&!sf2?null:A2);
+
+    // If only one SF match row in sheets, treat as two separate
+    let sf1sets=sf1?sf1.sets:[[0,0],[0,0],[0,0]];
+    let sf1status=sf1?sf1.status:'wait';
+    let sf2sets=sf2?sf2.sets:[[0,0],[0,0],[0,0]];
+    let sf2status=sf2?sf2.status:'wait';
+
+    // Final teams from SF winners
+    const sf1Winner=sf1?getMatchWinner(sf1):null;
+    const sf2Winner=sf2?getMatchWinner(sf2):null;
+    const sf1Loser=sf1?getMatchLoser(sf1):null;
+    const sf2Loser=sf2?getMatchLoser(sf2):null;
+
+    const finT1=fin?fin.t1:sf1Winner;
+    const finT2=fin?fin.t2:sf2Winner;
+    const finSets=fin?fin.sets:[[0,0],[0,0],[0,0]];
+    const finStatus=fin?fin.status:'wait';
+
+    const thirdT1=third?third.t1:sf1Loser;
+    const thirdT2=third?third.t2:sf2Loser;
+    const thirdSets=third?third.sets:[[0,0],[0,0],[0,0]];
+    const thirdStatus=third?third.status:'wait';
+
+    const finWinner=fin?getMatchWinner(fin):null;
+    const thirdWinner=third?getMatchWinner(third):null;
+
+    html+='<div class="playoff-gender-block">'+
+      '<div class="playoff-gender-title">'+genderBadge(gen)+'<span>Плей-офф</span></div>'+
+      '<div class="bracket-wrap">'+
+        // SF column
+        '<div class="bracket-round">'+
+          '<div class="bracket-round-title">Хагас финал</div>'+
+          bracketMatchHTML(sf1t1,sf1t2,sf1sets,sf1status,groups[0]+' 1-р vs '+groups[1]+' 2-р')+
+          bracketMatchHTML(sf2t1||B1,sf2t2||A2,sf2sets,sf2status,groups[1]+' 1-р vs '+groups[0]+' 2-р')+
+        '</div>'+
+        // connector
+        '<div style="display:flex;flex-direction:column;width:20px;align-items:center;justify-content:space-around;padding-top:36px">'+
+          '<div style="flex:1;border-right:1px solid var(--border2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);margin:20px 0"></div>'+
+        '</div>'+
+        // Final + 3rd column
+        '<div class="bracket-round">'+
+          '<div class="bracket-round-title">Финал</div>'+
+          bracketMatchHTML(finT1,finT2,finSets,finStatus,null)+
+          '<div style="margin-top:8px"><div class="bracket-round-title">3-р байр</div>'+
+          bracketMatchHTML(thirdT1,thirdT2,thirdSets,thirdStatus,null)+'</div>'+
+        '</div>'+
+        // Winner column
+        '<div style="display:flex;flex-direction:column;width:20px;align-items:center;justify-content:center;padding-top:36px">'+
+          '<div style="flex:0.4;border-right:1px solid var(--border2);border-top:1px solid var(--border2);margin-bottom:0"></div>'+
+        '</div>'+
+        '<div class="bracket-round" style="min-width:120px">'+
+          '<div class="bracket-round-title">Дүн</div>'+
+          (finWinner?'<div style="background:rgba(232,255,71,.06);border:1px solid rgba(232,255,71,.2);border-radius:8px;padding:10px 12px;margin:6px 8px;text-align:center">'+
+            '<div style="font-size:10px;color:var(--gold);letter-spacing:.06em;margin-bottom:4px">🏆 АВАРГА</div>'+
+            '<div style="font-size:14px;font-weight:600;color:var(--accent)">'+finWinner+'</div></div>':
+            '<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:6px 8px;text-align:center;color:var(--text3);font-size:12px;">Финал дуусаагүй</div>')+
+          (thirdWinner?'<div style="background:rgba(205,127,50,.06);border:1px solid rgba(205,127,50,.2);border-radius:8px;padding:8px 12px;margin:6px 8px;text-align:center">'+
+            '<div style="font-size:10px;color:#cd7f32;letter-spacing:.06em;margin-bottom:4px">🥉 3-р байр</div>'+
+            '<div style="font-size:13px;font-weight:600;color:#cd7f32">'+thirdWinner+'</div></div>':'')
+        +'</div>'+
+      '</div>'+
+    '</div>';
+  });
+
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+
+// Gender filter event delegation
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('[data-g]');
+  if(!btn) return;
+  curGender = btn.dataset.g;
+  const tab = btn.dataset.t;
+  if(tab==='results') renderResults();
+  if(tab==='schedule') renderSchedule();
+  if(tab==='standings') renderStandings();
+});
+
+function startRefresh(){clearInterval(refreshTimer);fetchData();refreshTimer=setInterval(fetchData,30000);}
 startRefresh();
 </script>
 </body>

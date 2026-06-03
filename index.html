@@ -233,7 +233,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,.9);backdrop-fi
 </div>
 
 <script>
-const SET_PTS=[1,1,0.5];
+const SET_PTS=[1,1,0.5]; // unused - match points now based on set ratio
 const PT_WIN=21,PT_WIN3=15,PT_MARGIN=2;
 let csvUrl=localStorage.getItem('vb_csv_url')||'';
 let allMatches=[],curTab='standings',curGender='all',refreshTimer=null;
@@ -251,9 +251,13 @@ function setsWon(m){
   return[w1,w2];
 }
 function matchPts(m){
-  let p1=0,p2=0;
-  for(let i=0;i<3;i++){const w=setWinner(m.sets,i);if(w===1)p1+=SET_PTS[i];else if(w===2)p2+=SET_PTS[i];}
-  return[p1,p2];
+  const[sw1,sw2]=setsWon(m);
+  if(!isDone(m))return[0,0];
+  if(sw1===2&&sw2===0)return[2,0];
+  if(sw2===2&&sw1===0)return[0,2];
+  if(sw1===2&&sw2===1)return[1.5,0.5];
+  if(sw2===2&&sw1===1)return[0.5,1.5];
+  return[0,0];
 }
 function totalBalls(m){
   let b1=0,b2=0;

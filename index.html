@@ -684,7 +684,8 @@ function renderPlayoff(){
   let html='<div class="playoff-section">';
 
   genders.forEach(gen=>{
-    const groups=[...new Set(allMatches.filter(m=>m.gender===gen&&m.group!=='Хагас финал'&&m.group!=='Финал'&&m.group!=='3-р байр').map(m=>m.group))];
+    const poG=['Хагас финал 1','Хагас финал 2','Хагас финал','Финал','3-р байр'];
+    const groups=[...new Set(allMatches.filter(m=>m.gender===gen&&!poG.includes(m.group)).map(m=>m.group))];
     if(groups.length<2)return;
 
     // Get top 2 from each group

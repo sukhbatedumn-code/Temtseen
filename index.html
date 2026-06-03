@@ -234,7 +234,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,.9);backdrop-fi
 
 <script>
 const SET_PTS=[1,1,0.5];
-const PT_WIN=25,PT_WIN3=15,PT_MARGIN=2;
+const PT_WIN=21,PT_WIN3=15,PT_MARGIN=2;
 let csvUrl=localStorage.getItem('vb_csv_url')||'';
 let allMatches=[],curTab='standings',curGender='all',refreshTimer=null;
 
@@ -280,9 +280,12 @@ function parseCSV(text){
       sets:[[n(cols[5]),n(cols[6])],[n(cols[7]),n(cols[8])],[n(cols[9]),n(cols[10])]],
       statusRaw:(cols[11]||'').toLowerCase()
     };
-    const done=m.statusRaw==='дууссан'||m.statusRaw==='done'||isDone(m);
-    const live=m.statusRaw==='live'||m.statusRaw==='явагдаж байна'||(!done&&(m.sets[0][0]>0||m.sets[0][1]>0));
-    return{...m,status:done?'done':live?'live':'wait'};
+    const explicitDone=m.statusRaw==='дууссан'||m.statusRaw==='done';
+    const explicitLive=m.statusRaw==='live'||m.statusRaw==='явагдаж байна';
+    const autoDone=isDone(m);
+    // Explicit status takes priority; auto-detect done from scores
+    const status=explicitLive?'live':(explicitDone||autoDone)?'done':'wait';
+    return{...m,status};
   }).filter(m=>m.t1&&m.t2);
 }
 

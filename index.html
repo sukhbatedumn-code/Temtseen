@@ -288,18 +288,17 @@ function parseCSV(text){
 
 async function fetchData(){
   if(!csvUrl){showDemo();return;}
-  // CSV текст мөн эсэхийг шалгах
   function isCSV(text){
     if(!text||text.length<10)return false;
     const first=text.trim().split('\n')[0]||'';
     return first.includes(',')&&!first.includes('<');
   }
-  const proxies=[
-    'https://corsproxy.io/?'+encodeURIComponent(csvUrl),
-    'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl),
-    csvUrl
-  ];
-  for(const url of proxies){
+  // Google Apps Script бол шууд, эс бол proxy ашиглана
+  const isScript=csvUrl.includes('script.google.com');
+  const urls=isScript
+    ?[csvUrl]
+    :[csvUrl,'https://corsproxy.io/?'+encodeURIComponent(csvUrl),'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl)];
+  for(const url of urls){
     try{
       const r=await fetch(url,{cache:'no-store'});
       if(!r.ok)continue;

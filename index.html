@@ -214,7 +214,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,.9);backdrop-fi
   <div id="sec-results" class="section"><div id="results-content"></div></div>
   <div id="sec-playoff" class="section"><div id="playoff-content"></div></div>
   <div id="sec-config" class="section">
-    <div class="config-panel">
+    <div class="config-panel"><div id="save-msg" style="display:none;background:rgba(45,255,154,.15);border:1px solid rgba(45,255,154,.3);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--green);margin-bottom:12px;">✓ Амжилттай хадгалагдлаа! Мэдээлэл ачаалж байна...</div>
       <h3>Google Sheets холболт</h3>
       <p>CSV export линкийг доор оруулна уу. Сайт 30 секунд тутам автоматаар шинэчлэгдэнэ.</p>
       <input class="inp" id="csv-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"/>
@@ -574,7 +574,9 @@ function saveConfig(){
   const v=document.getElementById('csv-url').value.trim();
   if(!v){alert('Линк оруулна уу');return;}
   csvUrl=v;localStorage.setItem('vb_csv_url',v);
-  showTab('standings');fetchData();
+  fetchData();
+  document.getElementById('save-msg').style.display='block';
+  setTimeout(()=>document.getElementById('save-msg').style.display='none',3000);
 }
 function showTab(t){
   curTab=t;

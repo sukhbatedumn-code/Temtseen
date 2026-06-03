@@ -270,13 +270,15 @@ function parseCSV(text){
   return lines.slice(1).map(row=>{
     const cols=row.split(',').map(c=>c.trim().replace(/^"|"$/g,''));
     const n=v=>parseInt(v)||0;
-    const gender=(cols[0]||'').trim();
+    const gender=(cols[1]||'').trim();
+    const round=parseInt(cols[0])||0;
     const m={
+      round:round,
       gender:gender,
-      group:cols[1]||'А бүлэг',
-      t1:cols[2]||'Баг 1',t2:cols[3]||'Баг 2',
-      sets:[[n(cols[4]),n(cols[5])],[n(cols[6]),n(cols[7])],[n(cols[8]),n(cols[9])]],
-      statusRaw:(cols[10]||'').toLowerCase()
+      group:cols[2]||'А бүлэг',
+      t1:cols[3]||'Баг 1',t2:cols[4]||'Баг 2',
+      sets:[[n(cols[5]),n(cols[6])],[n(cols[7]),n(cols[8])],[n(cols[9]),n(cols[10])]],
+      statusRaw:(cols[11]||'').toLowerCase()
     };
     const done=m.statusRaw==='дууссан'||m.statusRaw==='done'||isDone(m);
     const live=m.statusRaw==='live'||m.statusRaw==='явагдаж байна'||(!done&&(m.sets[0][0]>0||m.sets[0][1]>0));
@@ -301,25 +303,22 @@ async function fetchData(){
 function showDemo(){
   allMatches=[
     // Эрэгтэй А бүлэг
-    {gender:'Эр',group:'А бүлэг',t1:'Хаан',t2:'Аргал',sets:[[25,18],[22,25],[15,10]],status:'done'},
-    {gender:'Эр',group:'А бүлэг',t1:'Эрчим',t2:'Улаан од',sets:[[25,20],[18,25],[0,0]],status:'done'},
-    {gender:'Эр',group:'А бүлэг',t1:'Хаан',t2:'Улаан од',sets:[[14,16],[8,3],[0,0]],status:'live'},
-    {gender:'Эр',group:'А бүлэг',t1:'Аргал',t2:'Эрчим',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    // Эрэгтэй Б бүлэг
-    {gender:'Эр',group:'Б бүлэг',t1:'Нар',t2:'Тэнгэр',sets:[[25,22],[25,19],[0,0]],status:'done'},
-    {gender:'Эр',group:'Б бүлэг',t1:'Гал',t2:'Ус',sets:[[20,25],[25,23],[12,15]],status:'done'},
-    {gender:'Эр',group:'Б бүлэг',t1:'Нар',t2:'Ус',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    {gender:'Эр',group:'Б бүлэг',t1:'Тэнгэр',t2:'Гал',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    // Эмэгтэй А бүлэг
-    {gender:'Эм',group:'А бүлэг',t1:'Номин',t2:'Тэнгэр',sets:[[25,22],[23,25],[12,15]],status:'done'},
-    {gender:'Эм',group:'А бүлэг',t1:'Захиргаа',t2:'Нарс',sets:[[25,18],[25,20],[0,0]],status:'done'},
-    {gender:'Эм',group:'А бүлэг',t1:'Номин',t2:'Нарс',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    {gender:'Эм',group:'А бүлэг',t1:'Тэнгэр',t2:'Захиргаа',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    // Эмэгтэй Б бүлэг
-    {gender:'Эм',group:'Б бүлэг',t1:'Аяга',t2:'Цэцэг',sets:[[25,20],[22,25],[15,12]],status:'done'},
-    {gender:'Эм',group:'Б бүлэг',t1:'Нарс',t2:'Сар',sets:[[25,18],[25,22],[0,0]],status:'done'},
-    {gender:'Эм',group:'Б бүлэг',t1:'Цэцэг',t2:'Нарс',sets:[[0,0],[0,0],[0,0]],status:'wait'},
-    {gender:'Эм',group:'Б бүлэг',t1:'Аяга',t2:'Сар',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:1,gender:'Эр',group:'А бүлэг',t1:'Хаан',t2:'Аргал',sets:[[25,18],[22,25],[15,10]],status:'done'},
+    {round:1,gender:'Эр',group:'А бүлэг',t1:'Эрчим',t2:'Улаан од',sets:[[25,20],[18,25],[0,0]],status:'done'},
+    {round:1,gender:'Эр',group:'Б бүлэг',t1:'Нар',t2:'Тэнгэр',sets:[[25,22],[25,19],[0,0]],status:'done'},
+    {round:1,gender:'Эр',group:'Б бүлэг',t1:'Гал',t2:'Ус',sets:[[20,25],[25,23],[12,15]],status:'done'},
+    {round:2,gender:'Эм',group:'А бүлэг',t1:'Номин',t2:'Тэнгэр',sets:[[25,22],[23,25],[12,15]],status:'done'},
+    {round:2,gender:'Эм',group:'А бүлэг',t1:'Захиргаа',t2:'Нарс',sets:[[25,18],[25,20],[0,0]],status:'done'},
+    {round:2,gender:'Эм',group:'Б бүлэг',t1:'Аяга',t2:'Цэцэг',sets:[[14,16],[8,3],[0,0]],status:'live'},
+    {round:2,gender:'Эм',group:'Б бүлэг',t1:'Нарс',t2:'Сар',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'А бүлэг',t1:'Хаан',t2:'Улаан од',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'А бүлэг',t1:'Аргал',t2:'Эрчим',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'Б бүлэг',t1:'Нар',t2:'Ус',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:3,gender:'Эр',group:'Б бүлэг',t1:'Тэнгэр',t2:'Гал',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'А бүлэг',t1:'Номин',t2:'Нарс',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'А бүлэг',t1:'Тэнгэр',t2:'Захиргаа',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'Б бүлэг',t1:'Цэцэг',t2:'Нарс',sets:[[0,0],[0,0],[0,0]],status:'wait'},
+    {round:4,gender:'Эм',group:'Б бүлэг',t1:'Аяга',t2:'Сар',sets:[[0,0],[0,0],[0,0]],status:'wait'},
   ];
   renderAll();
   document.getElementById('last-update').textContent='⚠ Demo горим';
@@ -434,47 +433,55 @@ function renderResults(){
 function renderSchedule(){
   const c=document.getElementById('schedule-content');
   if(!allMatches.length){c.innerHTML='<div class="state-msg"><div>Тоглолтын мэдээлэл олдсонгүй</div></div>';return;}
-  const ms=filteredMatches();
+  const ms=filteredMatches().filter(m=>m.round>0);
   if(!ms.length){c.innerHTML='<div class="state-msg"><div>Тоглолт байхгүй</div></div>';return;}
 
   let html=genderFilterHTML('schedule');
-  html+='<div style="padding:1.25rem 0 0">';
-
+  const rounds=[...new Set(ms.map(m=>m.round))].sort((a,b)=>a-b);
   let num=1;
-  ms.forEach(m=>{
-    const[sw1,sw2]=setsWon(m);
-    const done=isDone(m);
-    const win1=done&&sw1>sw2, win2=done&&sw2>sw1;
-    const isM=m.gender==='Эр';
-    const gb=genderBadge(m.gender);
 
-    let right='';
-    if(m.status==='live'){
-      right='<span class="sch-live-tag"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.4s infinite;margin-right:4px"></span>Live</span>';
-    } else if(done){
-      right='<span class="sch-score">'+
-        '<span class="'+(win1?'sw':'')+'">'+sw1+'</span>'+
-        '<span style="opacity:.4;font-size:12px;margin:0 2px">:</span>'+
-        '<span class="'+(win2?'sw':'')+'">'+sw2+'</span>'+
-      '</span>'+
-      '<span class="sch-done-tag">&#10003; Дууссан</span>';
-    }
+  rounds.forEach(rnd=>{
+    const rms=ms.filter(m=>m.round===rnd);
+    html+='<div style="margin-bottom:1.5rem;padding-top:1.25rem">';
+    html+='<div style="font-family:var(--fn-bebas);font-size:13px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:10px;">'+rnd+'-р ээлж</div>';
 
-    html+='<div class="sch-row'+(done?' done':m.status==='live'?' live-row':'')+'">'+
-      '<div class="sch-num">'+num+'</div>'+
-      '<div class="sch-teams">'+
-        '<span style="color:'+(win1?'var(--accent)':'inherit')+'">'+m.t1+'</span>'+
-        '<span class="sch-vs">vs</span>'+
-        '<span style="color:'+(win2?'var(--accent)':'inherit')+'">'+m.t2+'</span>'+
-        '<span style="margin-left:6px">'+gb+'</span>'+
-        '<span style="font-size:10px;color:var(--text3);margin-left:4px">'+m.group+'</span>'+
-      '</div>'+
-      right+
-    '</div>';
-    num++;
+    // Group by gender+group within round
+    const genders=[...new Set(rms.map(m=>m.gender))];
+    genders.forEach(gen=>{
+      const gms=rms.filter(m=>m.gender===gen);
+      const groups=[...new Set(gms.map(m=>m.group))];
+      groups.forEach(grp=>{
+        const grpMs=gms.filter(m=>m.group===grp);
+        if(groups.length>1||genders.length>1){
+          html+='<div style="display:flex;align-items:center;gap:6px;margin:6px 0 4px;">'+genderBadge(gen)+'<span style="font-size:11px;color:var(--text3);">'+grp+'</span></div>';
+        }
+        grpMs.forEach(m=>{
+          const[sw1,sw2]=setsWon(m);
+          const done=isDone(m);
+          const win1=done&&sw1>sw2,win2=done&&sw2>sw1;
+          let right='';
+          if(m.status==='live'){
+            right='<span class="sch-live-tag"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.4s infinite;margin-right:4px"></span>Live</span>';
+          } else if(done){
+            right='<span class="sch-score"><span class="'+(win1?'sw':'')+'">'+sw1+'</span><span style="opacity:.4;font-size:12px;margin:0 2px">:</span><span class="'+(win2?'sw':'')+'">'+sw2+'</span></span>'+
+              '<span class="sch-done-tag">&#10003; Дууссан</span>';
+          }
+          html+='<div class="sch-row'+(done?' done':m.status==='live'?' live-row':'')+'">'+
+            '<div class="sch-num">'+num+'</div>'+
+            '<div class="sch-teams">'+
+              '<span style="color:'+(win1?'var(--accent)':'inherit')+'">'+m.t1+'</span>'+
+              '<span class="sch-vs">vs</span>'+
+              '<span style="color:'+(win2?'var(--accent)':'inherit')+'">'+m.t2+'</span>'+
+            '</div>'+
+            right+
+          '</div>';
+          num++;
+        });
+      });
+    });
+    html+='</div>';
   });
 
-  html+='</div>';
   c.innerHTML=html;
 }
 

@@ -669,14 +669,18 @@ function bracketMatchHTML(t1name,t2name,sets,status,label){
 }
 
 function getMatchWinner(m){
-  if(!m||!isDone(m))return null;
+  if(!m||(m.status!=='done'&&!isDone(m)))return null;
   const[sw1,sw2]=setsWon(m);
-  return sw1>sw2?m.t1:m.t2;
+  if(sw1>sw2)return m.t1||null;
+  if(sw2>sw1)return m.t2||null;
+  return null;
 }
 function getMatchLoser(m){
-  if(!m||!isDone(m))return null;
+  if(!m||(m.status!=='done'&&!isDone(m)))return null;
   const[sw1,sw2]=setsWon(m);
-  return sw1>sw2?m.t2:m.t1;
+  if(sw1>sw2)return m.t2||null;
+  if(sw2>sw1)return m.t1||null;
+  return null;
 }
 
 function findPlayoffMatch(gender,label){
@@ -711,8 +715,26 @@ function renderPlayoff(){
     const sf2t1=sf2&&sf2.t1?sf2.t1:B1;
     const sf2t2=sf2&&sf2.t2?sf2.t2:A2;
 
-    const sf1w=getMatchWinner(sf1);const sf1l=getMatchLoser(sf1);
-    const sf2w=getMatchWinner(sf2);const sf2l=getMatchLoser(sf2);
+    // Хагас финалын ялагч/ялагдагчийг resolved нэрээр тодорхойлно
+    function resolvedWinner(m, t1name, t2name){
+      if(!m||m.status!=='done')return null;
+      const[sw1,sw2]=setsWon(m);
+      if(sw1>sw2)return t1name||null;
+      if(sw2>sw1)return t2name||null;
+      return null;
+    }
+    function resolvedLoser(m, t1name, t2name){
+      if(!m||m.status!=='done')return null;
+      const[sw1,sw2]=setsWon(m);
+      if(sw1>sw2)return t2name||null;
+      if(sw2>sw1)return t1name||null;
+      return null;
+    }
+
+    const sf1w=resolvedWinner(sf1,sf1t1,sf1t2);
+    const sf1l=resolvedLoser(sf1,sf1t1,sf1t2);
+    const sf2w=resolvedWinner(sf2,sf2t1,sf2t2);
+    const sf2l=resolvedLoser(sf2,sf2t1,sf2t2);
 
     const finT1=fin&&fin.t1?fin.t1:sf1w;
     const finT2=fin&&fin.t2?fin.t2:sf2w;

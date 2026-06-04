@@ -307,7 +307,7 @@ async function fetchData(){
     :[csvUrl,'https://corsproxy.io/?'+encodeURIComponent(csvUrl),'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl)];
   for(const url of urls){
     try{
-      const r=await fetch(url,{cache:'no-store'});
+      const r=await fetch(url,{cache:'no-store',redirect:'follow',mode:'cors'});
       if(!r.ok)continue;
       const text=await r.text();
       if(!isCSV(text))continue;
@@ -681,112 +681,118 @@ function renderPlayoff(){
   const c=document.getElementById('playoff-content');
   if(!allMatches.length){c.innerHTML='<div class="state-msg"><div>Мэдээлэл байхгүй</div></div>';return;}
   const genders=[...new Set(allMatches.map(m=>m.gender))];
-  let html='<div class="playoff-section">';
+  let html='<div style="padding:1.25rem 0">';
 
   genders.forEach(gen=>{
     const poG=['Хагас финал 1','Хагас финал 2','Хагас финал','Финал','3-р байр'];
     const groups=[...new Set(allMatches.filter(m=>m.gender===gen&&!poG.includes(m.group)).map(m=>m.group))];
     if(groups.length<2)return;
 
-    // Get top 2 from each group
-    const r=[];
-    groups.forEach(grp=>{
-      const ranked=getGroupRankings(gen,grp);
-      r.push(ranked.map(t=>t?t.name:null));
-    });
-    const A1=r[0]&&r[0][0]?r[0][0]:null;
-    const A2=r[0]&&r[0][1]?r[0][1]:null;
-    const B1=r[1]&&r[1][0]?r[1][0]:null;
-    const B2=r[1]&&r[1][1]?r[1][1]:null;
+    const rA=getGroupRankings(gen,groups[0]);
+    const rB=getGroupRankings(gen,groups[1]);
+    const A1=rA[0]?rA[0].name:null;
+    const A2=rA[1]?rA[1].name:null;
+    const B1=rB[0]?rB[0].name:null;
+    const B2=rB[1]?rB[1].name:null;
 
-    // Playoff matches from sheets
-    const sf1=findPlayoffMatch(gen,'Хагас финал 1')||findPlayoffMatch(gen,'Хагас финал');
+    const sf1=findPlayoffMatch(gen,'Хагас финал 1');
     const sf2=findPlayoffMatch(gen,'Хагас финал 2');
     const fin=findPlayoffMatch(gen,'Финал');
     const third=findPlayoffMatch(gen,'3-р байр');
 
-    // SF teams: A1 vs B2, B1 vs A2
-    const sf1t1=sf1?sf1.t1:A1, sf1t2=sf1?sf1.t2:B2;
-    const sf2t1=sf2?sf2.t1:(sf1&&!sf2?null:B1), sf2t2=sf2?sf2.t2:(sf1&&!sf2?null:A2);
+    const sf1t1=sf1&&sf1.t1?sf1.t1:A1;
+    const sf1t2=sf1&&sf1.t2?sf1.t2:B2;
+    const sf2t1=sf2&&sf2.t1?sf2.t1:B1;
+    const sf2t2=sf2&&sf2.t2?sf2.t2:A2;
 
-    // If only one SF match row in sheets, treat as two separate
-    let sf1sets=sf1?sf1.sets:[[0,0],[0,0],[0,0]];
-    let sf1status=sf1?sf1.status:'wait';
-    let sf2sets=sf2?sf2.sets:[[0,0],[0,0],[0,0]];
-    let sf2status=sf2?sf2.status:'wait';
+    const sf1w=getMatchWinner(sf1);const sf1l=getMatchLoser(sf1);
+    const sf2w=getMatchWinner(sf2);const sf2l=getMatchLoser(sf2);
 
-    // Final teams from SF winners
-    const sf1Winner=sf1?getMatchWinner(sf1):null;
-    const sf2Winner=sf2?getMatchWinner(sf2):null;
-    const sf1Loser=sf1?getMatchLoser(sf1):null;
-    const sf2Loser=sf2?getMatchLoser(sf2):null;
+    const finT1=fin&&fin.t1?fin.t1:sf1w;
+    const finT2=fin&&fin.t2?fin.t2:sf2w;
+    const thirdT1=third&&third.t1?third.t1:sf1l;
+    const thirdT2=third&&third.t2?third.t2:sf2l;
+    const finW=getMatchWinner(fin);
+    const thirdW=getMatchWinner(third);
 
-    const finT1=fin?fin.t1:sf1Winner;
-    const finT2=fin?fin.t2:sf2Winner;
-    const finSets=fin?fin.sets:[[0,0],[0,0],[0,0]];
-    const finStatus=fin?fin.status:'wait';
+    function bTeam(name,isWin,isTbd){
+      const c2=isTbd?'color:var(--text3);font-style:italic':isWin?'color:var(--accent);font-weight:700':'color:var(--text);font-weight:500';
+      return '<div style="padding:7px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">'+
+        '<span style="font-size:12px;'+c2+';flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(name||'???')+'</span>'+
+        (isWin?'<span style="color:var(--accent);font-size:10px;">✓</span>':'')+
+      '</div>';
+    }
 
-    const thirdT1=third?third.t1:sf1Loser;
-    const thirdT2=third?third.t2:sf2Loser;
-    const thirdSets=third?third.sets:[[0,0],[0,0],[0,0]];
-    const thirdStatus=third?third.status:'wait';
+    function bBox(t1,t2,m,lbl){
+      const done=m&&isDone(m);const live=m&&m.status==='live';
+      const[sw1,sw2]=m?setsWon(m):[0,0];
+      const win1=done&&sw1>sw2,win2=done&&sw2>sw1;
+      const bc=live?'rgba(45,255,154,.4)':done?'var(--border2)':'var(--border)';
+      return '<div style="border:1px solid '+bc+';border-radius:8px;overflow:hidden;background:var(--surface);min-width:160px;max-width:190px;">'+
+        (live?'<div style="height:2px;background:linear-gradient(90deg,var(--green),var(--accent2));"></div>':'')+
+        (lbl?'<div style="font-size:9px;color:var(--text3);padding:2px 8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em;">'+lbl+'</div>':'')+
+        bTeam(t1,win1,!t1)+bTeam(t2,win2,!t2)+
+        ((done||live)?'<div style="font-size:10px;text-align:center;padding:2px;">'+(live?'<span style="color:var(--green)">● Live</span>':sw1+':'+sw2)+'</div>':'')+
+      '</div>';
+    }
 
-    const finWinner=fin?getMatchWinner(fin):null;
-    const thirdWinner=third?getMatchWinner(third):null;
+    const lb='border-top:1px solid var(--border2);';
+    const rb='border-right:1px solid var(--border2);';
 
-    html+='<div class="playoff-gender-block">'+
-      '<div class="playoff-gender-title">'+genderBadge(gen)+'<span>Плей-офф</span></div>'+
-      '<div class="bracket-wrap">'+
-        // SF column
-        '<div class="bracket-round">'+
-          '<div class="bracket-round-title">Хагас финал</div>'+
-          bracketMatchHTML(sf1t1,sf1t2,sf1sets,sf1status,groups[0]+' 1-р vs '+groups[1]+' 2-р')+
-          bracketMatchHTML(sf2t1||B1,sf2t2||A2,sf2sets,sf2status,groups[1]+' 1-р vs '+groups[0]+' 2-р')+
-        '</div>'+
-        // connector
-        '<div style="display:flex;flex-direction:column;width:20px;align-items:center;justify-content:space-around;padding-top:36px">'+
-          '<div style="flex:1;border-right:1px solid var(--border2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);margin:20px 0"></div>'+
-        '</div>'+
-        // Final + 3rd column
-        '<div class="bracket-round">'+
-          '<div class="bracket-round-title">Финал</div>'+
-          bracketMatchHTML(finT1,finT2,finSets,finStatus,null)+
-          '<div style="margin-top:8px"><div class="bracket-round-title">3-р байр</div>'+
-          bracketMatchHTML(thirdT1,thirdT2,thirdSets,thirdStatus,null)+'</div>'+
-        '</div>'+
-        // Winner column
-        '<div style="display:flex;flex-direction:column;width:20px;align-items:center;justify-content:center;padding-top:36px">'+
-          '<div style="flex:0.4;border-right:1px solid var(--border2);border-top:1px solid var(--border2);margin-bottom:0"></div>'+
-        '</div>'+
-        '<div class="bracket-round" style="min-width:120px">'+
-          '<div class="bracket-round-title">Дүн</div>'+
-          (finWinner?'<div style="background:rgba(232,255,71,.06);border:1px solid rgba(232,255,71,.2);border-radius:8px;padding:10px 12px;margin:6px 8px;text-align:center">'+
-            '<div style="font-size:10px;color:var(--gold);letter-spacing:.06em;margin-bottom:4px">🏆 АВАРГА</div>'+
-            '<div style="font-size:14px;font-weight:600;color:var(--accent)">'+finWinner+'</div></div>':
-            '<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:6px 8px;text-align:center;color:var(--text3);font-size:12px;">Финал дуусаагүй</div>')+
-          (thirdWinner?'<div style="background:rgba(205,127,50,.06);border:1px solid rgba(205,127,50,.2);border-radius:8px;padding:8px 12px;margin:6px 8px;text-align:center">'+
-            '<div style="font-size:10px;color:#cd7f32;letter-spacing:.06em;margin-bottom:4px">🥉 3-р байр</div>'+
-            '<div style="font-size:13px;font-weight:600;color:#cd7f32">'+thirdWinner+'</div></div>':'')
-        +'</div>'+
+    html+='<div style="margin-bottom:2.5rem;">'+
+      '<div style="font-family:var(--fn-bebas);font-size:14px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:20px;display:flex;align-items:center;gap:10px;">'+
+        genderBadge(gen)+'<span>Плей-офф</span>'+
       '</div>'+
+      '<div style="overflow-x:auto;padding-bottom:8px;">'+
+      '<div style="display:inline-flex;align-items:stretch;gap:0;min-width:520px;">'+
+
+        // SF
+        '<div style="display:flex;flex-direction:column;gap:20px;justify-content:space-around;">'+
+          '<div><div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Хагас финал</div>'+
+            bBox(sf1t1,sf1t2,sf1,groups[0]+' 1 · '+groups[1]+' 2')+
+          '</div>'+
+          '<div><div style="font-size:10px;color:var(--text3);margin-bottom:6px;">&nbsp;</div>'+
+            bBox(sf2t1,sf2t2,sf2,groups[1]+' 1 · '+groups[0]+' 2')+
+          '</div>'+
+        '</div>'+
+
+        // Connector
+        '<div style="display:flex;flex-direction:column;width:28px;align-self:stretch;">'+
+          '<div style="flex:1;'+rb+lb+'"></div>'+
+          '<div style="width:14px;'+lb+'align-self:flex-end;"></div>'+
+          '<div style="flex:1;'+rb+'border-bottom:1px solid var(--border2);"></div>'+
+        '</div>'+
+        '<div style="width:12px;'+lb+'align-self:center;margin-top:0;"></div>'+
+
+        // Final + 3rd
+        '<div style="display:flex;flex-direction:column;gap:20px;justify-content:space-around;">'+
+          '<div><div style="font-size:10px;font-weight:600;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">🏆 Финал</div>'+
+            bBox(finT1,finT2,fin,null)+
+          '</div>'+
+          '<div><div style="font-size:10px;font-weight:600;color:#cd7f32;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">🥉 3-р байр</div>'+
+            bBox(thirdT1,thirdT2,third,null)+
+          '</div>'+
+        '</div>'+
+
+        // Arrow to winner
+        '<div style="width:20px;'+lb+'align-self:flex-start;margin-top:62px;"></div>'+
+
+        // Winner
+        '<div style="display:flex;flex-direction:column;gap:20px;">'+
+          '<div><div style="font-size:10px;font-weight:600;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Аварга</div>'+
+            (finW?'<div style="background:linear-gradient(135deg,rgba(255,209,102,.12),rgba(232,255,71,.06));border:1px solid rgba(255,209,102,.3);border-radius:8px;padding:12px 14px;text-align:center;min-width:120px;"><div style="font-size:20px;margin-bottom:4px;">🏆</div><div style="font-size:14px;font-weight:700;color:var(--gold);">'+finW+'</div></div>':'<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center;color:var(--text3);font-size:11px;min-width:120px;">Тодорхойгүй</div>')+
+          '</div>'+
+          '<div><div style="font-size:10px;font-weight:600;color:#cd7f32;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">3-р байр</div>'+
+            (thirdW?'<div style="background:rgba(205,127,50,.1);border:1px solid rgba(205,127,50,.3);border-radius:8px;padding:12px 14px;text-align:center;min-width:120px;"><div style="font-size:20px;margin-bottom:4px;">🥉</div><div style="font-size:14px;font-weight:700;color:#cd7f32;">'+thirdW+'</div></div>':'<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center;color:var(--text3);font-size:11px;min-width:120px;">Тодорхойгүй</div>')+
+          '</div>'+
+        '</div>'+
+      '</div></div>'+
     '</div>';
   });
 
   html+='</div>';
   c.innerHTML=html;
 }
-
-
-// Gender filter event delegation
-document.addEventListener('click', function(e){
-  const btn = e.target.closest('[data-g]');
-  if(!btn) return;
-  curGender = btn.dataset.g;
-  const tab = btn.dataset.t;
-  if(tab==='results') renderResults();
-  if(tab==='schedule') renderSchedule();
-  if(tab==='standings') renderStandings();
-});
 
 function startRefresh(){clearInterval(refreshTimer);fetchData();refreshTimer=setInterval(fetchData,30000);}
 startRefresh();

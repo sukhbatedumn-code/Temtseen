@@ -285,7 +285,7 @@ function parseCSV(text){
       round:round,
       gender:gender,
       group:cols[2]||'А бүлэг',
-      t1:cols[3]||'Баг 1',t2:cols[4]||'Баг 2',
+      t1:cols[3]||'',t2:cols[4]||'',
       sets:[[n(cols[5]),n(cols[6])],[n(cols[7]),n(cols[8])],[n(cols[9]),n(cols[10])]],
       statusRaw:(cols[11]||'').toLowerCase()
     };
@@ -295,7 +295,7 @@ function parseCSV(text){
     // Explicit status takes priority; auto-detect done from scores
     const status=explicitLive?'live':(explicitDone||autoDone)?'done':'wait';
     return{...m,status};
-  }).filter(m=>m.t1&&m.t2);
+  }).filter(m=>m.group||m.t1||m.t2);
 }
 
 async function fetchData(){
